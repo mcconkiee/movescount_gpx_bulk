@@ -66,5 +66,6 @@ fs.readdir(path, function(err, items) {
       }
     });
   }
-  uploadRouteAndMove(items[0]);
+  // uploadRouteAndMove(items[0]);
+  route.removeAll((err, response) => {});
 });
