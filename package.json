@@ -11,8 +11,10 @@
   "dependencies": {
     "axios": "^0.17.1",
     "concat-stream": "^1.6.0",
+    "ff": "^0.2.2",
     "form-data": "^2.3.1",
     "gps-distance": "0.0.4",
+    "gpx-for-runners": "^1.0.4",
     "gpx-parse": "^0.10.4",
     "parse-gpx": "^1.0.0",
     "request": "^2.83.0",
