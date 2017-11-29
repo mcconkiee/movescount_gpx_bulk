@@ -1,10 +1,10 @@
 const async = require('async');
+const config = require('./config.js');
 const fs = require('fs');
 const ff = require('ff');
 const route = require('./lib/route.js');
 const move = require('./lib/move.js');
-const path = '/Users/ericmcconkie/Google Drive/Personal/gps/GPX files';
-
+const path = config.path;
 
 // if (process.argv.length <= 2) {
 //   console.log('Usage: ' + __filename + ' path/to/directory');
@@ -22,7 +22,7 @@ async function zzz() {
   console.log('Two second later');
 }
 
-fs.readdir(path, function (err, items) {
+fs.readdir(path, function(err, items) {
   let next = 0;
   let retry = 0;
 
@@ -68,12 +68,29 @@ fs.readdir(path, function (err, items) {
       }
     });
   }
-  // uploadRouteAndMove(items[0]);
-  // route.removeAll((err, response) => {});
-  move.removeAll((error, dataOfLastObject) => {
-    console.log('*******error,dataOfLastObject', error, dataOfLastObject);
-  });
+  // START THE PROCESS
+  uploadRouteAndMove(items[0]);
+
+  // //--- EXAMPLE FOR REMOVING ROUTES
+  // route.removeAll((err, response) => {
+  //   // console.log('*******done removeing all routes');
+  // });
+
+  // //--- EXAMPLE FOR REMOVING MOVES
+  // move.removeAll((error, dataOfLastObject) => {
+  //   console.log('*******error,dataOfLastObject', error, dataOfLastObject);
+  // });
+
+  // --- EXAMPLE FOR FETCHING ALL MOVES
   // move.findAll((error, dataOfLastObject) => {
   //   console.log('*******error,dataOfLastObject', error, dataOfLastObject.length);
+  // });
+
+  // --- EXAMPLE REMOVE EVERYTHING
+  // route.removeAll((err, response) => {
+  //   // console.log('*******done removeing all routes');
+  //   move.removeAll((error, dataOfLastObject) => {
+  //     console.log('*******error,dataOfLastObject', error, dataOfLastObject);
+  //   });
   // });
 });
