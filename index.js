@@ -3,18 +3,33 @@ const config = require('./config.js');
 const Errors = require('./lib/errors.js');
 const fs = require('fs');
 const ff = require('ff');
-const route = require('./lib/route.js');
-const move = require('./lib/move.js');
+const route = require('./models/route.js');
+const move = require('./models/move.js');
+
+// check if we have arguments for cookie or dir, etc
+process.argv.forEach(arg => {
+  console.log(arg);
+  if (arg.includes('dir=')) {
+    const val = arg.split('dir=');
+    config.path = val[1];
+    console.log('updating config.path = ', config.path);
+  }
+  if (arg.includes('cookie=')) {
+    const val = arg.split('cookie=');
+    config.cookie = val[1];
+    console.log('updating config.cookie = ', config.cookie);
+  }
+});
+
+//assign the path & upload holding dir
 const path = config.path;
+const uploadedPathName = 'uploaded';
+const uploadPath = `${config.path}/${uploadedPathName}`;
 
-// if (process.argv.length <= 2) {
-//   console.log('Usage: ' + __filename + ' path/to/directory');
-//   process.exit(-1);
-// }
-
+//handle errors
 process.on('uncaughtException', function(err) {
   console.error(err, err.stack);
-  console.log('Node NOT Exiting...');
+  console.log("We've handled this error and moving on....");
 });
 
 // var path = process.argv[2];
@@ -23,11 +38,12 @@ function sleep(ms) {
 }
 
 async function zzz() {
-  console.log('Taking a break...');
   await sleep(2000);
-  console.log('Two second later');
 }
 
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
 fs.readdir(path, function(err, items) {
   let next = 0;
   let retry = 0;
@@ -40,16 +56,12 @@ fs.readdir(path, function(err, items) {
       return;
     }
     const gpxFileNext = items[next];
-    zzz(); //respect query limit on geocode...
+    zzz(); //respect query limit on geocode...we need latency to recover
     uploadRouteAndMove(gpxFileNext);
   }
 
   function uploadRouteAndMove(gpxFile) {
-    if (
-      gpxFile === '.DS_Store' ||
-      gpxFile === 'uploaded' ||
-      gpxFile === undefined
-    ) {
+    if (!gpxFile.includes('.gpx') || gpxFile === undefined) {
       doNext();
       return;
     }
@@ -75,8 +87,8 @@ fs.readdir(path, function(err, items) {
         return;
       }
       // console.log(err, moveData);
-      console.log('move and route for ******** ', filePath);
-      const destination = `${path}/uploaded/${gpxFile}`;
+      console.log('CREATED move and route for ******** ', filePath);
+      const destination = `${uploadPath}/${gpxFile}`;
       console.log('moving file to : ', destination);
       fs.rename(filePath, destination, err => {
         if (!err) {
@@ -85,25 +97,25 @@ fs.readdir(path, function(err, items) {
       });
     });
   }
-  // START THE PROCESS
+  // START BATCH UPLOADS!
   uploadRouteAndMove(items[0]);
 
   // //--- EXAMPLE FOR REMOVING ROUTES
   // route.removeAll((err, response) => {
   //   console.log('*******done removeing all routes');
   // });
-
+  //
   // //--- EXAMPLE FOR REMOVING MOVES
   // move.removeAll((error, dataOfLastObject) => {
   //   console.log('*******error,dataOfLastObject', error, dataOfLastObject);
   // });
-
-  // --- EXAMPLE FOR FETCHING ALL MOVES
+  //
+  // //--- EXAMPLE FOR FETCHING ALL MOVES
   // move.findAll((error, dataOfLastObject) => {
   //   console.log('*******error,dataOfLastObject', error, dataOfLastObject.length);
   // });
-
-  // --- EXAMPLE REMOVE EVERYTHING
+  //
+  // //--- EXAMPLE REMOVE EVERYTHING
   // route.removeAll((err, response) => {
   //   // console.log('*******done removeing all routes');
   //   move.removeAll((error, dataOfLastObject) => {
