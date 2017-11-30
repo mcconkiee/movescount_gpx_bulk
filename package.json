@@ -19,6 +19,7 @@
     "parse-gpx": "^1.0.0",
     "request": "^2.83.0",
     "reverse-geocoding": "^2.0.0",
-    "unirest": "^0.5.1"
+    "unirest": "^0.5.1",
+    "xml2js": "^0.4.19"
   }
 }
