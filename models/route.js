@@ -1,16 +1,16 @@
 const config = require('../config.js');
-var distance = require('gps-distance');
+const distance = require('gps-distance');
 const Errors = require('../lib/errors.js');
-var geocoding = new require('reverse-geocoding');
-var gpxParse = require('gpx-parse');
+const fs = require('fs');
+const geocoding = new require('reverse-geocoding');
+const gpxParse = require('gpx-parse');
 
-const helper = require('./helper.js');
+const helper = require('../lib/helper.js');
 const http = require('http');
 const move = require('./move.js');
 const parseGpx = require('parse-gpx');
-var request = require('request');
-const fs = require('fs'),
-  xml2js = require('xml2js');
+const request = require('request');
+const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 
 const route = {
