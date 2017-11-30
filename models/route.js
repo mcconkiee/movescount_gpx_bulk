@@ -14,7 +14,6 @@ const xml2js = require('xml2js');
 const parser = new xml2js.Parser();
 
 const route = {
-  cookie: config.cookie,
   create: function(filePath, done) {
     const self = this;
     let times = [];
@@ -131,7 +130,7 @@ const route = {
       port: null,
       path: '/Move/RouteAppData',
       headers: {
-        cookie: this.cookie
+        cookie: config.cookie
       }
     };
     var req = http.request(options, function(res) {
@@ -170,7 +169,7 @@ const route = {
       url: 'http://www.movescount.com/api/routes/private',
       headers: {
         'cache-control': 'no-cache',
-        cookie: this.cookie
+        cookie: config.cookie
       }
     };
     request(options, function(error, response, body) {
@@ -206,7 +205,7 @@ const route = {
       method: 'DELETE',
       url: `http://www.movescount.com/Move/RouteAppData/${id}`,
       headers: {
-        cookie: this.cookie
+        cookie: config.cookie
       }
     };
 
